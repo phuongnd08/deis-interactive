@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = DeisInteractive::VERSION
   spec.authors       = ["Phuong Nguyen"]
   spec.email         = ["phuongnd08@gmail.com"]
-  spec.description   = %q{A helper to launch redis server during test}
-  spec.summary       = %q{A helper to launch redis server during test}
+  spec.description   = %q{Wrapper for kubectl to quickly launch console to a deis app}
+  spec.summary       = %q{Wrapper for kubectl to quickly launch console to a deis app}
   spec.homepage      = "https://github.com/phuongnd08/deis-interactive"
   spec.license       = "MIT"
 
