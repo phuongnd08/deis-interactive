@@ -5,7 +5,7 @@ require 'deis-interactive/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "deis-interactive"
-  spec.version       = RedisTest::VERSION
+  spec.version       = DeisInteractive::VERSION
   spec.authors       = ["Phuong Nguyen"]
   spec.email         = ["phuongnd08@gmail.com"]
   spec.description   = %q{A helper to launch redis server during test}
