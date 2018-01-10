@@ -32,6 +32,11 @@ Logs for your Rails app:
     $ bundle exec deis-rails logs -a MY-APP -p MY-PROCESS -f
 
 
+Execute a bash:
+
+    $ bundle exec deis-rails exec -a MY-APP bash ARGS
+
+
 ## Contributing
 
 1. Fork it
