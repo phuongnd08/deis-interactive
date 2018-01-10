@@ -18,3 +18,4 @@ tmp
 vendor/
 .idea/
 binstubs/
+.byebug_history
