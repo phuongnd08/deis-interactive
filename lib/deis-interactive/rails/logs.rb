@@ -28,9 +28,15 @@ module DeisInteractive
       end
 
       def log_pods
-        pod_ids.each do |pod_id|
+        pids = pod_ids.map do |pod_id|
           log_pod(pod_id)
         end
+
+        at_exit do
+          pids.each { |pid| Process.kill("KILL", pid) }
+        end
+
+        pids.each { |pid| Process.wait(pid) }
       end
 
       def log_pod(pod_id)
