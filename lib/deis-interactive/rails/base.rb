@@ -14,12 +14,14 @@ module DeisInteractive
         patterns.join("-")
       end
 
-      def container_ids
-        puts "Fetching container ids to attach console process..."
-        output= `kubectl get pods --namespace #{app} -o name | grep #{processes_pattern}`
-        output.split("\n").reject(&:empty?).map do |str|
-          str.split("/").last
-        end
+      def pod_ids
+        @pod_ids ||= (
+          puts "Fetching pod ids to attach console process..."
+          output= `kubectl get pods --namespace #{app} -o name | grep #{processes_pattern}`
+          output.split("\n").reject(&:empty?).map do |str|
+            str.split("/").last
+          end
+        )
       end
     end
   end

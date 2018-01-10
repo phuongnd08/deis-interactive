@@ -13,10 +13,14 @@ class DeisRails < Thor
 
   desc "logs [-f] -a APP [-d PROCESS]", "logs on an app"
   method_option :app, aliases: ["a"], type: :string, required: true, desc: "Name of the app"
+  method_option :process, aliases: ["p"], type: :string, required: false, desc: "Processes to be logged on"
+  method_option :follow, aliases: ["f"], type: :boolean, required: false, desc: "Tail the log"
   def logs
-    require_relative "../lib/deis-interactive/rails/log"
+    require_relative "../lib/deis-interactive/rails/logs"
     app = options[:app]
-    DeisRailsLog.new(app, process).perform
+    process = options[:process]
+    follow = options[:follow]
+    DeisInteractive::Rails::Logs.new(app, process, follow: follow).perform
   end
 end
 

@@ -9,17 +9,17 @@ module DeisInteractive
       end
 
       def perform
-        puts "Run rails console attaching to #{container_id}"
-        exec "kubectl exec -it --namespace #{app} #{container_id} -- bash -c #{Shellwords.escape(bash)}"
+        puts "Run rails console attaching to #{pod_id}"
+        exec "kubectl exec -it --namespace #{app} #{pod_id} -- bash -c #{Shellwords.escape(bash)}"
       end
 
-      def container_id
-        @container_id ||= (
-          sample_container_id = container_ids.sample
-          if (sample_container_id.nil?)
-            raise "Error. None container of #{process} is found. kubectl won't be able to attach to run a console session"
+      def pod_id
+        @pod_id ||= (
+          sample_pod_id = pod_ids.sample
+          if (sample_pod_id.nil?)
+            raise "Error. No pod of #{process} is found. kubectl won't be able to attach to run a console session"
           end
-          sample_container_id
+          sample_pod_id
         )
       end
 
