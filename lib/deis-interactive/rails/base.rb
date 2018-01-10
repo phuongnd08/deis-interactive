@@ -16,7 +16,7 @@ module DeisInteractive
 
       def pod_ids
         @pod_ids ||= (
-          puts "Fetching pod ids to attach console process..."
+          puts "Fetching pod ids..."
           output= `kubectl get pods --namespace #{app} -o name | grep #{processes_pattern}`
           output.split("\n").reject(&:empty?).map do |str|
             str.split("/").last
