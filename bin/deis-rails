@@ -11,7 +11,7 @@ class DeisRails < Thor
     DeisInteractive::Rails::Console.new(app).perform
   end
 
-  desc "exec -a APP COMMAND PARAMS", "run console on an app"
+  desc "exec -a APP COMMAND PARAMS", "run any command on an app"
   method_option :app, aliases: ["a"], type: :string, required: true, desc: "Name of the app"
   def exec(command, *params)
     require_relative "../lib/deis-interactive/rails/exec"
@@ -20,7 +20,6 @@ class DeisRails < Thor
     debugger
     DeisInteractive::Rails::Exec.new(app, command, params).perform
   end
-
 
   desc "logs [-f] -a APP [-d PROCESS]", "logs on an app"
   method_option :app, aliases: ["a"], type: :string, required: true, desc: "Name of the app"
