@@ -27,6 +27,11 @@ Runing console for your Rails app:
 
     $ bundle exec deis-rails console -a MY-APP
 
+Logs for your Rails app:
+
+    $ bundle exec deis-rails logs -a MY-APP -p MY-PROCESS -f
+
+
 ## Contributing
 
 1. Fork it
