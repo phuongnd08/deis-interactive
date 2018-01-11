@@ -1,14 +1,26 @@
 require_relative 'base'
 require "shellwords"
+require 'concurrent'
+require 'open3'
 
 module DeisInteractive
   module Rails
     class Logs < Base
       attr_reader :follow
+      attr_reader :pids
+      attr_reader :outputs
 
       def initialize(app, process, follow: false)
         super(app, process)
         @follow = follow
+        @pids = Concurrent::Array.new
+        @outputs = Concurrent::Array.new
+
+        at_exit do
+          pids.each do |pid|
+            Process.kill("KILL", pid) if pid_alive?(pid)
+          end
+        end
       end
 
       def perform
@@ -21,6 +33,25 @@ module DeisInteractive
         log_pods
       end
 
+      def pid_alive?(pid)
+        begin
+          Process.getpgid( pid )
+          true
+        rescue Errno::ESRCH
+          false
+        end
+      end
+
+      def any_pid_alive?
+        20.times {
+          break if pids.count > 0
+          sleep 0.1
+        }
+
+        return false if pids.count == 0
+        pids.any? { |pid| pid_alive?(pid) }
+      end
+
       def kube_options
         if follow
           "-f"
@@ -28,20 +59,30 @@ module DeisInteractive
       end
 
       def log_pods
-        pids = pod_ids.map do |pod_id|
+        pod_ids.each do |pod_id|
           log_pod(pod_id)
         end
 
-        at_exit do
-          pids.each { |pid| Process.kill("KILL", pid) }
+        loop do
+          while (outputs.count > 0)
+            puts outputs.shift
+          end
+          if any_pid_alive?
+            sleep 0.01
+          else
+            break
+          end
         end
-
-        pids.each { |pid| Process.wait(pid) }
       end
 
       def log_pod(pod_id)
-        fork do
-          exec "kubectl logs #{kube_options} #{pod_id} --namespace #{app}"
+        Thread.new do
+          cmd = "kubectl logs #{kube_options} #{pod_id} --namespace #{app}"
+          Open3.popen2e(cmd) do |_, out_err, wait_thr|
+            puts "Tracking #{wait_thr.pid}"
+            pids << wait_thr.pid
+            out_err.each { |line| outputs << line }
+          end
         end
       end
     end
