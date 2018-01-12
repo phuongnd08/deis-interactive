@@ -52,7 +52,7 @@ module DeisInteractive
         pids.any? { |pid| pid_alive?(pid) }
       end
 
-      def kube_options
+      def follow_option
         if follow
           "-f"
         end
@@ -77,7 +77,7 @@ module DeisInteractive
 
       def log_pod(pod_id)
         Thread.new do
-          cmd = "kubectl logs #{kube_options} #{pod_id} --namespace #{app}"
+          cmd = "kubectl logs #{follow_option} --tail 20 #{pod_id} --namespace #{app}"
           Open3.popen2e(cmd) do |_, out_err, wait_thr|
             puts "Tracking #{wait_thr.pid}"
             pids << wait_thr.pid
