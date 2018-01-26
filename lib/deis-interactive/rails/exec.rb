@@ -1,4 +1,5 @@
 require_relative 'base'
+require 'byebug'
 require "shellwords"
 
 module DeisInteractive
@@ -29,7 +30,7 @@ module DeisInteractive
 
       def perform
         puts "Execute #{args} on #{pod_id}"
-        exec "kubectl exec -it --namespace #{app} #{pod_id} -- bash -c #{escaped_args}"
+        exec "kubectl exec -it --namespace #{app} #{pod_id} -- bash -c #{bash}"
       end
 
       def pod_id
@@ -40,6 +41,10 @@ module DeisInteractive
           end
           sample_pod_id
         )
+      end
+
+      def bash
+        Shellwords.escape(". /app/.profile.d/ruby.sh && PATH=/app/.heroku/node/bin:$PATH && #{escaped_args}")
       end
     end
   end
