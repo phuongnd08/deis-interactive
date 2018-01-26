@@ -16,8 +16,6 @@ class DeisRails < Thor
   def exec(command, *params)
     require_relative "../lib/deis-interactive/rails/exec"
     app = options[:app]
-    require 'byebug'
-    debugger
     DeisInteractive::Rails::Exec.new(app, command, params).perform
   end
 
