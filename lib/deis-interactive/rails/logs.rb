@@ -11,12 +11,12 @@ module DeisInteractive
       attr_reader :pids
       attr_reader :outputs
 
-      def initialize(app, process, follow: false, count: 20)
+      def initialize(app, process, follow: false, count: nil)
         super(app, process)
         @follow = follow
         @pids = Concurrent::Array.new
         @outputs = Concurrent::Array.new
-        @count = count
+        @count = count || 20
 
         at_exit do
           pids.each do |pid|
