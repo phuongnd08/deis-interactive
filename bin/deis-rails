@@ -19,16 +19,18 @@ class DeisRails < Thor
     DeisInteractive::Rails::Exec.new(app, command, params).perform
   end
 
-  desc "logs [-f] -a APP [-d PROCESS]", "logs on an app"
+  desc "logs [-n COUNT] [-f] -a APP [-d PROCESS]", "logs on an app"
   method_option :app, aliases: ["a"], type: :string, required: true, desc: "Name of the app"
   method_option :process, aliases: ["p"], type: :string, required: false, desc: "Processes to be logged on"
   method_option :follow, aliases: ["f"], type: :boolean, required: false, desc: "Tail the log"
+  method_option :count, aliases: ["n"], type: :numeric, required: false, desc: "Number of lines"
   def logs
     require_relative "../lib/deis-interactive/rails/logs"
     app = options[:app]
     process = options[:process]
     follow = options[:follow]
-    DeisInteractive::Rails::Logs.new(app, process, follow: follow).perform
+    count = options[:count]
+    DeisInteractive::Rails::Logs.new(app, process, follow: follow, count: count).perform
   end
 end
 

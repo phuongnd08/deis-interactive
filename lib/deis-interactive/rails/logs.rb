@@ -7,14 +7,16 @@ module DeisInteractive
   module Rails
     class Logs < Base
       attr_reader :follow
+      attr_reader :count
       attr_reader :pids
       attr_reader :outputs
 
-      def initialize(app, process, follow: false)
+      def initialize(app, process, follow: false, count: 20)
         super(app, process)
         @follow = follow
         @pids = Concurrent::Array.new
         @outputs = Concurrent::Array.new
+        @count = count
 
         at_exit do
           pids.each do |pid|
@@ -77,7 +79,7 @@ module DeisInteractive
 
       def log_pod(pod_id)
         Thread.new do
-          cmd = "kubectl logs #{follow_option} --tail 20 #{pod_id} --namespace #{app}"
+          cmd = "kubectl logs #{follow_option} --tail #{count} #{pod_id} --namespace #{app}"
           Open3.popen2e(cmd) do |_, out_err, wait_thr|
             pids << wait_thr.pid
             out_err.each { |line| outputs << line }
