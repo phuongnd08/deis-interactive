@@ -4,7 +4,7 @@ require "thor"
 
 class DeisRails < Thor
   desc "console -a APP", "run console on an app"
-  method_option :app, aliases: ["a"], type: :string, required: true, desc: "Name of the app"
+  method_option :app, aliases: ["a"], type: :string, desc: "Name of the app"
   def console
     require_relative "../lib/deis-interactive/rails/console"
     app = options[:app]
@@ -12,7 +12,7 @@ class DeisRails < Thor
   end
 
   desc "exec -a APP COMMAND PARAMS", "run any command on an app"
-  method_option :app, aliases: ["a"], type: :string, required: true, desc: "Name of the app"
+  method_option :app, aliases: ["a"], type: :string, desc: "Name of the app"
   def exec(command, *params)
     require_relative "../lib/deis-interactive/rails/exec"
     app = options[:app]
@@ -20,7 +20,7 @@ class DeisRails < Thor
   end
 
   desc "logs [-n COUNT] [-f] -a APP [-d PROCESS]", "logs on an app"
-  method_option :app, aliases: ["a"], type: :string, required: true, desc: "Name of the app"
+  method_option :app, aliases: ["a"], type: :string, desc: "Name of the app"
   method_option :process, aliases: ["p"], type: :string, required: false, desc: "Processes to be logged on"
   method_option :follow, aliases: ["f"], type: :boolean, required: false, desc: "Tail the log"
   method_option :count, aliases: ["n"], type: :numeric, required: false, desc: "Number of lines"
